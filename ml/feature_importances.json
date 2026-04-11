@@ -1,0 +1,446 @@
+[
+  {
+    "feature": "cv_monthly_spend",
+    "importance": 0.119932
+  },
+  {
+    "feature": "avg_transactions_per_month",
+    "importance": 0.082646
+  },
+  {
+    "feature": "Telecommunication Services",
+    "importance": 0.032404
+  },
+  {
+    "feature": "Semiconductors and Related Devices",
+    "importance": 0.024641
+  },
+  {
+    "feature": "Travel Agencies",
+    "importance": 0.023537
+  },
+  {
+    "feature": "Beauty and Barber Shops",
+    "importance": 0.022447
+  },
+  {
+    "feature": "Lodging - Hotels, Motels, Resorts",
+    "importance": 0.020283
+  },
+  {
+    "feature": "Cable, Satellite, and Other Pay Television Services",
+    "importance": 0.020156
+  },
+  {
+    "feature": "Railroad Passenger Transport",
+    "importance": 0.020044
+  },
+  {
+    "feature": "Cleaning and Maintenance Services",
+    "importance": 0.01739
+  },
+  {
+    "feature": "Airlines",
+    "importance": 0.016805
+  },
+  {
+    "feature": "Industrial Equipment and Supplies",
+    "importance": 0.01648
+  },
+  {
+    "feature": "Utilities - Electric, Gas, Water, Sanitary",
+    "importance": 0.015798
+  },
+  {
+    "feature": "Wholesale Clubs",
+    "importance": 0.014487
+  },
+  {
+    "feature": "Non-Ferrous Metal Foundries",
+    "importance": 0.014321
+  },
+  {
+    "feature": "Lighting, Fixtures, Electrical Supplies",
+    "importance": 0.014077
+  },
+  {
+    "feature": "Computer Network Services",
+    "importance": 0.013742
+  },
+  {
+    "feature": "Digital Goods - Media, Books, Apps",
+    "importance": 0.013397
+  },
+  {
+    "feature": "Miscellaneous Machinery and Parts Manufacturing",
+    "importance": 0.012645
+  },
+  {
+    "feature": "Passenger Railways",
+    "importance": 0.011933
+  },
+  {
+    "feature": "Brick, Stone, and Related Materials",
+    "importance": 0.011793
+  },
+  {
+    "feature": "Grocery Stores, Supermarkets",
+    "importance": 0.011067
+  },
+  {
+    "feature": "Gardening Supplies",
+    "importance": 0.010636
+  },
+  {
+    "feature": "Department Stores",
+    "importance": 0.010619
+  },
+  {
+    "feature": "Miscellaneous Metalwork",
+    "importance": 0.01036
+  },
+  {
+    "feature": "Drug Stores and Pharmacies",
+    "importance": 0.009878
+  },
+  {
+    "feature": "Motion Picture Theaters",
+    "importance": 0.009705
+  },
+  {
+    "feature": "Ship Chandlers",
+    "importance": 0.00965
+  },
+  {
+    "feature": "Non-Precious Metal Services",
+    "importance": 0.009245
+  },
+  {
+    "feature": "Miscellaneous Food Stores",
+    "importance": 0.009148
+  },
+  {
+    "feature": "Service Stations",
+    "importance": 0.009033
+  },
+  {
+    "feature": "Discount Stores",
+    "importance": 0.008946
+  },
+  {
+    "feature": "Furniture, Home Furnishings, and Equipment Stores",
+    "importance": 0.008905
+  },
+  {
+    "feature": "Steel Products Manufacturing",
+    "importance": 0.008761
+  },
+  {
+    "feature": "Passenger Railways",
+    "importance": 0.008751
+  },
+  {
+    "feature": "Railroad Freight",
+    "importance": 0.008746
+  },
+  {
+    "feature": "Lumber and Building Materials",
+    "importance": 0.008646
+  },
+  {
+    "feature": "Hardware Stores",
+    "importance": 0.008479
+  },
+  {
+    "feature": "Electroplating, Plating, Polishing Services",
+    "importance": 0.008323
+  },
+  {
+    "feature": "Pottery and Ceramics",
+    "importance": 0.007563
+  },
+  {
+    "feature": "Car Washes",
+    "importance": 0.007334
+  },
+  {
+    "feature": "Precious Stones and Metals",
+    "importance": 0.007142
+  },
+  {
+    "feature": "Automotive Service Shops",
+    "importance": 0.007014
+  },
+  {
+    "feature": "Dentists and Orthodontists",
+    "importance": 0.006917
+  },
+  {
+    "feature": "Eating Places and Restaurants",
+    "importance": 0.006862
+  },
+  {
+    "feature": "Heat Treating Metal Services",
+    "importance": 0.006421
+  },
+  {
+    "feature": "Tools, Parts, Supplies Manufacturing",
+    "importance": 0.006397
+  },
+  {
+    "feature": "Family Clothing Stores",
+    "importance": 0.00639
+  },
+  {
+    "feature": "Sports Apparel, Riding Apparel Stores",
+    "importance": 0.006169
+  },
+  {
+    "feature": "Heating, Plumbing, Air Conditioning Contractors",
+    "importance": 0.006043
+  },
+  {
+    "feature": "Fast Food Restaurants",
+    "importance": 0.005911
+  },
+  {
+    "feature": "Doctors, Physicians",
+    "importance": 0.005885
+  },
+  {
+    "feature": "Miscellaneous Home Furnishing Stores",
+    "importance": 0.005846
+  },
+  {
+    "feature": "Upholstery and Drapery Stores",
+    "importance": 0.005777
+  },
+  {
+    "feature": "Leather Goods",
+    "importance": 0.005674
+  },
+  {
+    "feature": "Money Transfer",
+    "importance": 0.005221
+  },
+  {
+    "feature": "Artist Supply Stores, Craft Shops",
+    "importance": 0.00514
+  },
+  {
+    "feature": "Optometrists, Optical Goods and Eyeglasses",
+    "importance": 0.004919
+  },
+  {
+    "feature": "Chiropractors",
+    "importance": 0.004848
+  },
+  {
+    "feature": "Electronics Stores",
+    "importance": 0.004833
+  },
+  {
+    "feature": "Medical Services",
+    "importance": 0.004719
+  },
+  {
+    "feature": "Gift, Card, Novelty Stores",
+    "importance": 0.004683
+  },
+  {
+    "feature": "Podiatrists",
+    "importance": 0.004615
+  },
+  {
+    "feature": "Miscellaneous Metals",
+    "importance": 0.004533
+  },
+  {
+    "feature": "Insurance Sales, Underwriting",
+    "importance": 0.004481
+  },
+  {
+    "feature": "Ironwork",
+    "importance": 0.004411
+  },
+  {
+    "feature": "Package Stores, Beer, Wine, Liquor",
+    "importance": 0.004404
+  },
+  {
+    "feature": "Steelworks",
+    "importance": 0.004327
+  },
+  {
+    "feature": "Taxicabs and Limousines",
+    "importance": 0.004314
+  },
+  {
+    "feature": "Athletic Fields, Commercial Sports",
+    "importance": 0.004268
+  },
+  {
+    "feature": "Hospitals",
+    "importance": 0.004167
+  },
+  {
+    "feature": "Book Stores",
+    "importance": 0.004092
+  },
+  {
+    "feature": "Bus Lines",
+    "importance": 0.004086
+  },
+  {
+    "feature": "Welding Repair",
+    "importance": 0.004061
+  },
+  {
+    "feature": "Tolls and Bridge Fees",
+    "importance": 0.003908
+  },
+  {
+    "feature": "Recreational Sports, Clubs",
+    "importance": 0.003891
+  },
+  {
+    "feature": "Amusement Parks, Carnivals, Circuses",
+    "importance": 0.003811
+  },
+  {
+    "feature": "Legal Services and Attorneys",
+    "importance": 0.003803
+  },
+  {
+    "feature": "Women's Ready-To-Wear Stores",
+    "importance": 0.003565
+  },
+  {
+    "feature": "Betting (including Lottery Tickets, Casinos)",
+    "importance": 0.003541
+  },
+  {
+    "feature": "Shoe Stores",
+    "importance": 0.003516
+  },
+  {
+    "feature": "Motor Freight Carriers and Trucking",
+    "importance": 0.003413
+  },
+  {
+    "feature": "Laundry Services",
+    "importance": 0.003309
+  },
+  {
+    "feature": "Drinking Places (Alcoholic Beverages)",
+    "importance": 0.003288
+  },
+  {
+    "feature": "Towing Services",
+    "importance": 0.003229
+  },
+  {
+    "feature": "Automotive Body Repair Shops",
+    "importance": 0.003152
+  },
+  {
+    "feature": "Postal Services - Government Only",
+    "importance": 0.00313
+  },
+  {
+    "feature": "Automotive Parts and Accessories Stores",
+    "importance": 0.003129
+  },
+  {
+    "feature": "Computers, Computer Peripheral Equipment",
+    "importance": 0.003098
+  },
+  {
+    "feature": "Sporting Goods Stores",
+    "importance": 0.003076
+  },
+  {
+    "feature": "Miscellaneous Fabricated Metal Products",
+    "importance": 0.002955
+  },
+  {
+    "feature": "Digital Goods - Games",
+    "importance": 0.002939
+  },
+  {
+    "feature": "Antique Shops",
+    "importance": 0.00281
+  },
+  {
+    "feature": "Miscellaneous Metal Fabrication",
+    "importance": 0.002784
+  },
+  {
+    "feature": "Music Stores - Musical Instruments",
+    "importance": 0.002762
+  },
+  {
+    "feature": "Cruise Lines",
+    "importance": 0.002695
+  },
+  {
+    "feature": "Lawn and Garden Supply Stores",
+    "importance": 0.00269
+  },
+  {
+    "feature": "Tax Preparation Services",
+    "importance": 0.002543
+  },
+  {
+    "feature": "Theatrical Producers",
+    "importance": 0.00248
+  },
+  {
+    "feature": "Cosmetic Stores",
+    "importance": 0.002452
+  },
+  {
+    "feature": "Accounting, Auditing, and Bookkeeping Services",
+    "importance": 0.002422
+  },
+  {
+    "feature": "Bolt, Nut, Screw, Rivet Manufacturing",
+    "importance": 0.002227
+  },
+  {
+    "feature": "Coated and Laminated Products",
+    "importance": 0.002186
+  },
+  {
+    "feature": "Florists Supplies, Nursery Stock and Flowers",
+    "importance": 0.002108
+  },
+  {
+    "feature": "Steel Drums and Barrels",
+    "importance": 0.001983
+  },
+  {
+    "feature": "Detective Agencies, Security Services",
+    "importance": 0.001972
+  },
+  {
+    "feature": "Floor Covering Stores",
+    "importance": 0.001893
+  },
+  {
+    "feature": "Books, Periodicals, Newspapers",
+    "importance": 0.001717
+  },
+  {
+    "feature": "Fabricated Structural Metal Products",
+    "importance": 0.001703
+  },
+  {
+    "feature": "Local and Suburban Commuter Transportation",
+    "importance": 0.001433
+  },
+  {
+    "feature": "Household Appliance Stores",
+    "importance": 0.00106
+  }
+]

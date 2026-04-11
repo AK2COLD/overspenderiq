@@ -1,0 +1,21 @@
+# Environment
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# ML artifacts
+ml/model.pkl
+ml/model_features.joblib
+
+# Node
+node_modules/
+frontend/dist/
+
+# Misc
+.DS_Store
+*.log
