@@ -1,6 +1,6 @@
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  Legend, ResponsiveContainer, Cell,
+  Legend, ResponsiveContainer,
 } from "recharts";
 
 const CATEGORIES = ["essentials","dining","entertainment","travel","retail","other"];
@@ -10,14 +10,17 @@ const CAT_LABEL  = { essentials:"Essentials", dining:"Dining", entertainment:"En
 export default function SpendingBreakdownChart({ breakdown, benchmarks, cohort }) {
   if (!breakdown || !benchmarks) return null;
 
-  const bench = benchmarks.find(b => b.cohort === cohort);
+  const bench = benchmarks?.find(b => b.cohort === cohort);
 
-  const data = CATEGORIES.map(cat => ({
-    name:   CAT_LABEL[cat],
-    "Your Avg":      Math.round(breakdown[cat]?.monthly_avg || 0),
-    "Cohort Median": Math.round(bench?.spending[cat]?.median_monthly || 0),
-    pct:    `${(breakdown[cat]?.pct_of_total || 0).toFixed(1)}%`,
-  }));
+  const data = CATEGORIES.map(cat => {
+    const row = {
+      name:     CAT_LABEL[cat],
+      "Your Avg": Math.round(breakdown[cat]?.monthly_avg || 0),
+      pct:      `${(breakdown[cat]?.pct_of_total || 0).toFixed(1)}%`,
+    };
+    if (bench) row["Cohort Median"] = Math.round(bench.spending[cat]?.median_monthly || 0);
+    return row;
+  });
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload?.length) return null;

@@ -98,6 +98,23 @@ export default function Home() {
               >
                 View Dashboard →
               </button>
+
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-slate-200" />
+                </div>
+                <div className="relative flex justify-center text-xs text-slate-400">
+                  <span className="bg-white px-2">or</span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => navigate("/import")}
+                className="w-full py-3 rounded-lg border border-slate-200 text-slate-600 font-semibold text-sm
+                           hover:bg-slate-50 hover:border-slate-300 transition-colors"
+              >
+                Analyze a New User → Upload CSV
+              </button>
             </>
           )}
         </div>
