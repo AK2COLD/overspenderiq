@@ -1,9 +1,11 @@
 import { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getCohortBenchmarks, getFeatureImportances } from "../api";
 import HealthScoreGauge from "../components/HealthScoreGauge";
 import SpendingBreakdownChart from "../components/SpendingBreakdownChart";
 import RecommendationsPanel from "../components/RecommendationsPanel";
+import FeatureImportanceChart from "../components/FeatureImportanceChart";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -54,8 +56,12 @@ export default function Import() {
     form.append("file", file);
     if (cohort) form.append("cohort", cohort);
     try {
-      const { data } = await axios.post(`${API}/predict/upload`, form);
-      setResult(data);
+      const [{ data }, benchmarks, importances] = await Promise.all([
+        axios.post(`${API}/predict/upload`, form),
+        getCohortBenchmarks(),
+        getFeatureImportances(),
+      ]);
+      setResult({ ...data, benchmarks, importances });
     } catch (err) {
       setError(err.response?.data?.detail || "Upload failed — check your CSV format.");
     } finally {
@@ -98,20 +104,20 @@ export default function Import() {
             <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-6">
               <p className="text-sm font-medium text-blue-800 mb-2">Demo Files — try these to see the model in action:</p>
               <div className="flex gap-3 flex-wrap">
-                <button onClick={() => downloadDemo("demo_overspender.csv")}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-blue-200 rounded-lg text-xs text-blue-700 font-medium hover:bg-blue-50 transition-colors">
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  demo_overspender.csv
-                </button>
-                <button onClick={() => downloadDemo("demo_saver.csv")}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-blue-200 rounded-lg text-xs text-blue-700 font-medium hover:bg-blue-50 transition-colors">
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  demo_saver.csv
-                </button>
+                {[
+                  { file: "demo_overspender.csv",    label: "High risk (~99%)",     color: "red" },
+                  { file: "demo_moderate_high.csv",  label: "Moderate-high (~51%)", color: "amber" },
+                  { file: "demo_moderate_low.csv",   label: "Moderate-low (~43%)",  color: "amber" },
+                  { file: "demo_saver.csv",          label: "Low risk (~3%)",       color: "green" },
+                ].map(({ file, label }) => (
+                  <button key={file} onClick={() => downloadDemo(file)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-blue-200 rounded-lg text-xs text-blue-700 font-medium hover:bg-blue-50 transition-colors">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    {label}
+                  </button>
+                ))}
               </div>
               <p className="text-xs text-blue-600 mt-2">
                 CSV format: <code className="bg-blue-100 px-1 rounded">date, amount, mcc</code> — one row per transaction.
@@ -188,8 +194,20 @@ export default function Import() {
   );
 }
 
+function StatCard({ label, value, sub }) {
+  return (
+    <div className="bg-white rounded-xl border border-slate-100 p-4">
+      <p className="text-xs text-slate-500 mb-1">{label}</p>
+      <p className="text-xl font-bold text-slate-800">{value}</p>
+      {sub && <p className="text-xs text-slate-400 mt-0.5">{sub}</p>}
+    </div>
+  );
+}
+
 function Results({ result, onReset }) {
+  const [tab, setTab] = useState("overview");
   const fmt = n => `$${Number(n).toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
+  const pct = n => `${Number(n).toFixed(1)}%`;
 
   return (
     <div className="space-y-6">
@@ -201,53 +219,138 @@ function Results({ result, onReset }) {
         </button>
       </div>
 
-      {/* Summary stats */}
-      <div className="grid grid-cols-3 gap-3">
-        {[
-          ["Transactions", result.num_transactions.toLocaleString()],
-          ["Months of Data", result.num_months],
-          ["Avg Monthly Spend", fmt(result.mean_monthly_spend)],
-        ].map(([label, value]) => (
-          <div key={label} className="bg-white rounded-xl border border-slate-100 p-4 text-center">
-            <p className="text-xs text-slate-500 mb-1">{label}</p>
-            <p className="text-lg font-bold text-slate-800">{value}</p>
-          </div>
+      {/* Tab bar */}
+      <div className="flex gap-1 bg-white border border-slate-200 rounded-xl p-1 w-fit">
+        {[["overview","Overview"],["recommendations","Recommendations"],["insights","Model Insights"],["cohorts","Cohort View"]].map(([k, label]) => (
+          <button key={k} onClick={() => setTab(k)}
+            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+              tab === k ? "bg-blue-600 text-white" : "text-slate-600 hover:text-slate-900"
+            }`}>
+            {label}
+          </button>
         ))}
       </div>
 
-      {/* Gauge */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 flex flex-col items-center">
-        <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">Budget Risk Score</h3>
-        <HealthScoreGauge probability={result.overspend_probability} />
-        {result.cohort && (
-          <p className="mt-3 text-sm text-slate-500">
-            Compared against <span className="font-medium text-slate-700">{COHORT_LABEL[result.cohort]}</span> cohort benchmarks
-          </p>
-        )}
-      </div>
+      {/* OVERVIEW */}
+      {tab === "overview" && (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Gauge */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 flex flex-col items-center">
+              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">Budget Risk Score</h3>
+              <HealthScoreGauge probability={result.overspend_probability} />
+              <p className="mt-4 text-center text-sm text-slate-500 max-w-[200px]">
+                {result.overspend_probability < 30
+                  ? "Your spending patterns align well with savers in your income group."
+                  : result.overspend_probability < 60
+                  ? "Some spending categories may benefit from a closer look."
+                  : "Several spending patterns suggest an opportunity to adjust toward saver norms."}
+              </p>
+            </div>
 
-      {/* Spending breakdown */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-        <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">
-          Monthly Spending Breakdown
-        </h3>
-        <SpendingBreakdownChart
-          breakdown={result.spending_breakdown}
-          benchmarks={null}
-          cohort={null}
-        />
-      </div>
+            {/* Stats */}
+            <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">Spending Profile</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <StatCard label="Transactions"        value={result.num_transactions.toLocaleString()} />
+                <StatCard label="Months of Data"      value={result.num_months} />
+                <StatCard label="Avg Monthly Spend"   value={fmt(result.mean_monthly_spend)} />
+                <StatCard label="Spend Volatility (CV)" value={pct(result.cv_monthly_spend * 100)}
+                  sub={result.cv_monthly_spend > 0.20 ? "High variability" : "Consistent spending"} />
+                <StatCard label="Avg Transactions/Mo" value={Math.round(result.avg_transactions_per_month)} />
+                {result.cohort && <StatCard label="Income Cohort" value={COHORT_LABEL[result.cohort]} />}
+              </div>
+            </div>
+          </div>
 
-      {/* Recommendations */}
-      {result.recommendations?.length > 0 && (
+          {/* Spending chart */}
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+            <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">
+              Monthly Spending Breakdown{result.cohort ? " vs. Cohort Median" : ""}
+            </h3>
+            <SpendingBreakdownChart
+              breakdown={result.spending_breakdown}
+              benchmarks={result.benchmarks}
+              cohort={result.cohort}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* RECOMMENDATIONS */}
+      {tab === "recommendations" && (
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          {result.recommendations?.length > 0 ? (
+            <>
+              <div className="mb-4">
+                <h3 className="font-semibold text-slate-800">Personalized Budget Adjustments</h3>
+                <p className="text-sm text-slate-500 mt-1">
+                  Based on saver medians within your{result.cohort ? ` ${COHORT_LABEL[result.cohort]}` : ""} income group
+                  and your {result.overspend_probability}% risk score.
+                </p>
+              </div>
+              <RecommendationsPanel recommendations={result.recommendations} />
+            </>
+          ) : (
+            <div className="text-center py-10 text-slate-400">
+              <p className="text-sm">Select an income range on the upload screen to unlock personalized recommendations.</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* MODEL INSIGHTS */}
+      {tab === "insights" && result.importances && (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
           <div className="mb-4">
-            <h3 className="font-semibold text-slate-800">Personalized Budget Adjustments</h3>
+            <h3 className="font-semibold text-slate-800">Key Predictive Factors</h3>
             <p className="text-sm text-slate-500 mt-1">
-              Based on saver medians within your income group and your {result.overspend_probability}% risk score.
+              Top 20 features our Random Forest model weighted most heavily when predicting budget risk.
             </p>
           </div>
-          <RecommendationsPanel recommendations={result.recommendations} />
+          <FeatureImportanceChart importances={result.importances} />
+        </div>
+      )}
+
+      {/* COHORT VIEW */}
+      {tab === "cohorts" && result.benchmarks && (
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 overflow-x-auto">
+          <div className="mb-4">
+            <h3 className="font-semibold text-slate-800">Cohort Spending Benchmarks</h3>
+            <p className="text-sm text-slate-500 mt-1">
+              Median monthly spend for saver-aligned users within each income cohort.
+              {result.cohort && <span className="ml-1 font-medium text-blue-600">Highlighted row = your cohort.</span>}
+            </p>
+          </div>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left text-slate-400 border-b border-slate-100">
+                <th className="pb-2 pr-4 font-medium">Cohort</th>
+                <th className="pb-2 pr-4 font-medium text-right">Monthly Total</th>
+                {["essentials","dining","entertainment","travel","retail","other"].map(c => (
+                  <th key={c} className="pb-2 pr-4 font-medium text-right capitalize">{c}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {result.benchmarks.map(b => (
+                <tr key={b.cohort} className={`border-b border-slate-50 ${b.cohort === result.cohort ? "bg-blue-50" : ""}`}>
+                  <td className="py-3 pr-4 font-medium text-slate-700">
+                    {COHORT_LABEL[b.cohort] || b.cohort}
+                    {b.cohort === result.cohort && <span className="ml-2 text-xs text-blue-600 font-medium">← you</span>}
+                  </td>
+                  <td className="py-3 pr-4 text-right text-slate-600">
+                    {fmt(b.median_total_monthly_spend)}
+                  </td>
+                  {["essentials","dining","entertainment","travel","retail","other"].map(c => (
+                    <td key={c} className="py-3 pr-4 text-right text-slate-600">
+                      {fmt(b.spending[c]?.median_monthly)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

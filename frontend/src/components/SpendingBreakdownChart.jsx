@@ -8,7 +8,7 @@ const CAT_LABEL  = { essentials:"Essentials", dining:"Dining", entertainment:"En
                      travel:"Travel", retail:"Retail", other:"Other" };
 
 export default function SpendingBreakdownChart({ breakdown, benchmarks, cohort }) {
-  if (!breakdown || !benchmarks) return null;
+  if (!breakdown) return null;
 
   const bench = benchmarks?.find(b => b.cohort === cohort);
 
@@ -58,7 +58,7 @@ export default function SpendingBreakdownChart({ breakdown, benchmarks, cohort }
         <Tooltip content={<CustomTooltip />} />
         <Legend wrapperStyle={{ fontSize: 12, paddingTop: 12 }} />
         <Bar dataKey="Your Avg" fill="#3b82f6" radius={[0, 4, 4, 0]} maxBarSize={18} />
-        <Bar dataKey="Cohort Median" fill="#cbd5e1" radius={[0, 4, 4, 0]} maxBarSize={18} />
+        {bench && <Bar dataKey="Cohort Median" fill="#cbd5e1" radius={[0, 4, 4, 0]} maxBarSize={18} />}
       </BarChart>
     </ResponsiveContainer>
   );
