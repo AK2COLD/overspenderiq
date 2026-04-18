@@ -63,9 +63,12 @@ BUCKET_MAP = {
 
 app = FastAPI(title="OverspenderIQ API", version="1.0.0")
 
+_raw_origins = os.getenv("ALLOWED_ORIGINS", "*")
+ALLOWED_ORIGINS = ["*"] if _raw_origins == "*" else _raw_origins.split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # tightened before production
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
