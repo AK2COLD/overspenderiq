@@ -1,7 +1,18 @@
 import sys
 import os
 import io
+import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Load MCC code → description mapping from static file (avoids a DB dependency)
+_MCC_JSON_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "data", "mcc_codes.json",
+)
+with open(_MCC_JSON_PATH) as _f:
+    _MCC_RAW = json.load(_f)
+# Keys are strings in JSON; store as int → str for fast lookup
+MCC_CODE_MAP: dict[int, str] = {int(k): v for k, v in _MCC_RAW.items()}
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Depends, UploadFile, File, Form
@@ -11,7 +22,7 @@ from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from typing import Optional
 
-from backend.db import get_db, engine
+from backend.db import get_db
 from backend.models import UserFeature, CohortBenchmark
 from ml.predict import get_feature_importances, predict, get_feature_names
 
@@ -259,10 +270,8 @@ async def predict_from_csv(
     if len(df) < 3:
         raise HTTPException(400, "CSV must contain at least 3 valid transactions.")
 
-    # 3. Map MCC codes → descriptions
-    mcc_df  = pd.read_sql("SELECT code, description FROM mcc_codes", engine)
-    mcc_map = dict(zip(mcc_df["code"], mcc_df["description"]))
-    df["mcc_name"] = df["mcc"].map(mcc_map)
+    # 3. Map MCC codes → descriptions using static lookup table
+    df["mcc_name"] = df["mcc"].map(MCC_CODE_MAP)
     df = df.dropna(subset=["mcc_name"])
 
     if df.empty:
