@@ -6,9 +6,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL", "")
-# Railway/Heroku supply postgres:// URIs; SQLAlchemy requires postgresql://
-if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+# Normalise scheme: postgres:// → postgresql+psycopg:// (psycopg3, no system libpq needed)
+DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
 
 if not DATABASE_URL:
     raise RuntimeError(
