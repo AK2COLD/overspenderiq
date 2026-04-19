@@ -8,10 +8,6 @@ __pycache__/
 .venv/
 venv/
 
-# ML artifacts
-ml/model.pkl
-ml/model_features.joblib
-
 # Node
 node_modules/
 frontend/dist/
