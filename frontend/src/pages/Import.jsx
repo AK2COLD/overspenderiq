@@ -152,6 +152,9 @@ export default function Import() {
                   Blank Template
                 </button>
               </div>
+              <p className="text-xs text-blue-500 mt-1.5 italic">
+                In production, this would accept direct exports from Chase, Mint, or any bank portal — or connect via Plaid for instant access.
+              </p>
             </div>
 
             {/* Drop zone */}

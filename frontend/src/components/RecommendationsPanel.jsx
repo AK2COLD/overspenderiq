@@ -70,10 +70,11 @@ export default function RecommendationsPanel({ recommendations }) {
 
             {hasOpportunity && (
               <p className="text-xs text-slate-500 mt-2">
-                Adjusting {CAT_LABEL[rec.category].toLowerCase()} from{" "}
+                Reducing {CAT_LABEL[rec.category].toLowerCase()} from{" "}
                 <span className="font-medium">{fmt(rec.current_spend)}</span> to{" "}
-                <span className="font-medium text-blue-600">{fmt(rec.recommended_cap)}</span> could save approximately{" "}
-                <span className="font-medium text-emerald-600">{fmt(rec.estimated_savings)}/month</span> compared to peers in your income group.
+                <span className="font-medium text-blue-600">{fmt(rec.recommended_cap)}</span> saves approximately{" "}
+                <span className="font-medium text-emerald-600">{fmt(rec.estimated_savings)}/month</span> — a risk-adjusted step toward your income group's saver median of{" "}
+                <span className="font-medium">{fmt(rec.cohort_median)}/month</span>.
               </p>
             )}
           </div>
