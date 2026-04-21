@@ -149,20 +149,21 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Spending breakdown */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">
-                Monthly Spending Breakdown vs. Cohort Median
-              </h3>
-              <SpendingBreakdownChart
-                breakdown={profile.spending_breakdown}
-                benchmarks={benchmarks}
-                cohort={profile.cohort}
-              />
-            </div>
+            {/* Spending breakdown + Savings preview side by side */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">
+                  Monthly Spending Breakdown vs. Cohort Median
+                </h3>
+                <SpendingBreakdownChart
+                  breakdown={profile.spending_breakdown}
+                  benchmarks={benchmarks}
+                  cohort={profile.cohort}
+                />
+              </div>
 
-            {/* Savings preview */}
-            {recs && <SavingsPreview recommendations={recs.recommendations} onViewAll={() => setTab("recommendations")} />}
+              {recs && <SavingsPreview recommendations={recs.recommendations} onViewAll={() => setTab("recommendations")} />}
+            </div>
           </div>
         )}
 
