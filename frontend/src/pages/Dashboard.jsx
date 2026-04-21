@@ -160,6 +160,9 @@ export default function Dashboard() {
                 cohort={profile.cohort}
               />
             </div>
+
+            {/* Savings preview */}
+            {recs && <SavingsPreview recommendations={recs.recommendations} onViewAll={() => setTab("recommendations")} />}
           </div>
         )}
 
@@ -234,6 +237,79 @@ export default function Dashboard() {
               </tbody>
             </table>
           </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const CAT_ICON  = { dining: "🍽️", entertainment: "🎬", travel: "✈️", retail: "🛍️" };
+const CAT_LABEL_REC = { dining: "Dining", entertainment: "Entertainment", travel: "Travel", retail: "Retail" };
+
+function SavingsPreview({ recommendations, onViewAll }) {
+  if (!recommendations?.length) return null;
+
+  const fmt = n => `$${Number(n).toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
+
+  const flagged = recommendations
+    .filter(r => r.over_median && r.estimated_savings > 0)
+    .sort((a, b) => b.estimated_savings - a.estimated_savings);
+
+  if (!flagged.length) return null;
+
+  const totalSavings = flagged.reduce((sum, r) => sum + r.estimated_savings, 0);
+  const preview = flagged.slice(0, 3);
+  const extra   = flagged.length - preview.length;
+
+  return (
+    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">
+            Savings Opportunities
+          </h3>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Up to {fmt(totalSavings)}/month across {flagged.length} {flagged.length === 1 ? "category" : "categories"}
+          </p>
+        </div>
+        <button onClick={onViewAll}
+          className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+          Full breakdown →
+        </button>
+      </div>
+
+      <div className="space-y-2">
+        {preview.map(rec => {
+          const overPct = Math.round((rec.current_spend / rec.cohort_median - 1) * 100);
+          return (
+            <div key={rec.category}
+              className="flex items-center gap-3 px-4 py-3 bg-amber-50 border border-amber-100 rounded-xl">
+              <span className="text-xl">{CAT_ICON[rec.category]}</span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-sm font-semibold text-slate-700">
+                    {CAT_LABEL_REC[rec.category]}
+                  </span>
+                  <span className="text-xs text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-full font-medium">
+                    {overPct}% over cohort median
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  {fmt(rec.current_spend)}/mo &rarr; suggested cap {fmt(rec.recommended_cap)}/mo
+                </p>
+              </div>
+              <div className="text-right flex-shrink-0">
+                <p className="text-sm font-bold text-emerald-600">~{fmt(rec.estimated_savings)}/mo</p>
+                <p className="text-xs text-slate-400">potential</p>
+              </div>
+            </div>
+          );
+        })}
+        {extra > 0 && (
+          <button onClick={onViewAll}
+            className="w-full text-center text-xs text-blue-600 font-medium py-2 hover:text-blue-800 transition-colors">
+            +{extra} more {extra === 1 ? "category" : "categories"} — view full recommendations →
+          </button>
         )}
       </div>
     </div>
