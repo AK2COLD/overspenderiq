@@ -26,6 +26,27 @@ function downloadDemo(filename) {
   window.open(`${API}/demo-data/${filename}`, "_blank");
 }
 
+function downloadTemplate() {
+  const rows = [
+    "date,amount,mcc",
+    "2024-01-05,45.20,5812",
+    "2024-01-08,120.00,5411",
+    "2024-01-12,28.50,5814",
+    "2024-01-15,85.00,5732",
+    "2024-01-20,200.00,5311",
+    "2024-01-22,55.75,5812",
+    "2024-01-25,320.00,4511",
+    "2024-02-01,42.00,5814",
+    "2024-02-05,95.00,5411",
+    "2024-02-10,18.99,5816",
+  ].join("\n");
+  const blob = new Blob([rows], { type: "text/csv" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href = url; a.download = "transaction_template.csv"; a.click();
+  URL.revokeObjectURL(url);
+}
+
 export default function Import() {
   const navigate = useNavigate();
   const inputRef  = useRef();
@@ -119,9 +140,18 @@ export default function Import() {
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-blue-600 mt-2">
-                CSV format: <code className="bg-blue-100 px-1 rounded">date, amount, mcc</code> — one row per transaction.
-              </p>
+              <div className="flex items-center justify-between mt-2">
+                <p className="text-xs text-blue-600">
+                  CSV format: <code className="bg-blue-100 px-1 rounded">date, amount, mcc</code> — one row per transaction.
+                </p>
+                <button onClick={downloadTemplate}
+                  className="flex items-center gap-1 text-xs text-blue-700 font-medium hover:text-blue-900 transition-colors whitespace-nowrap ml-3">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Blank Template
+                </button>
+              </div>
             </div>
 
             {/* Drop zone */}
@@ -237,7 +267,17 @@ function Results({ result, onReset }) {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Gauge */}
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 flex flex-col items-center">
-              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">Budget Risk Score</h3>
+              <div className="flex items-center gap-1.5 mb-4">
+                <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Budget Risk Score</h3>
+                <div className="group relative">
+                  <svg className="w-3.5 h-3.5 text-slate-400 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-2.5 bg-slate-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 text-center leading-relaxed">
+                    The percentage of the model's 100 decision trees that voted this spending profile as an overspender. Higher = greater confidence the user overspends relative to their income.
+                  </div>
+                </div>
+              </div>
               <HealthScoreGauge probability={result.overspend_probability} />
               <p className="mt-4 text-center text-sm text-slate-500 max-w-[200px]">
                 {result.overspend_probability < 30
@@ -245,6 +285,9 @@ function Results({ result, onReset }) {
                   : result.overspend_probability < 60
                   ? "Some spending categories may benefit from a closer look."
                   : "Several spending patterns suggest an opportunity to adjust toward saver norms."}
+              </p>
+              <p className="mt-2 text-center text-xs text-slate-400 max-w-[200px]">
+                {result.overspend_probability}% of model trees voted overspender
               </p>
             </div>
 

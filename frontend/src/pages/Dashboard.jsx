@@ -106,9 +106,19 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Gauge panel */}
               <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 flex flex-col items-center">
-                <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">
-                  Budget Risk Score
-                </h3>
+                <div className="flex items-center gap-1.5 mb-4">
+                  <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">
+                    Budget Risk Score
+                  </h3>
+                  <div className="group relative">
+                    <svg className="w-3.5 h-3.5 text-slate-400 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-2.5 bg-slate-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 text-center leading-relaxed">
+                      The percentage of the model's 100 decision trees that voted this spending profile as an overspender. Higher = greater confidence the user overspends relative to their income.
+                    </div>
+                  </div>
+                </div>
                 <HealthScoreGauge probability={profile.overspend_probability} />
                 <p className="mt-4 text-center text-sm text-slate-500 max-w-[200px]">
                   {profile.overspend_probability < 30
@@ -116,6 +126,9 @@ export default function Dashboard() {
                     : profile.overspend_probability < 60
                     ? "Some spending categories may benefit from a closer look."
                     : "Several spending patterns suggest an opportunity to adjust toward saver norms."}
+                </p>
+                <p className="mt-2 text-center text-xs text-slate-400 max-w-[200px]">
+                  {profile.overspend_probability}% of model trees voted overspender
                 </p>
               </div>
 
